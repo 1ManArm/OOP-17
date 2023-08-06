@@ -131,13 +131,19 @@
     <ClCompile Include="cultures.cpp" />
     <ClCompile Include="harvest.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="ServiceFunctions.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="backpack.h" />
     <ClInclude Include="CherryTree.h" />
     <ClInclude Include="cultures.h" />
     <ClInclude Include="Fruit.h" />
     <ClInclude Include="harvest.h" />
+    <ClInclude Include="Location.h" />
     <ClInclude Include="Macros%28unused%29.h" />
+    <ClInclude Include="Menu.h" />
+    <ClInclude Include="ServiceFunctions.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

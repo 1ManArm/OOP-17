@@ -16,4 +16,6 @@ public:
 	double getWeight();
 	virtual ~Harvest();
 	virtual void printInfo();
+	/*virtual Harvest* getHarvest() = 0;   |
+	virtual size_t getHarvestRemain() = 0; | <--Если раскомментировать,то появятся новые ошибки*/
 };

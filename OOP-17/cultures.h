@@ -20,4 +20,6 @@ public:
 	virtual ~Culture();
 	virtual void printInfo()const;
 	virtual Harvest* harvestType() = 0;
+	/*virtual Harvest* getHarvest() = 0;     |
+	virtual size_t getHarvestRemain() = 0;   | <--Если раскомментировать,то появятся новые ошибки*/
 };
