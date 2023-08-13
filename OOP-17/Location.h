@@ -18,23 +18,28 @@ class locationGameInterface
 {
 public:
 	virtual ~locationGameInterface() {}; 
-	virtual Culture* AddNewPlant() = 0;
-	virtual void DeletePlant() = 0;
+	virtual Culture* addNewPlant() = 0;
+	virtual void deletePlant() = 0;
 };
 
 class CultureLocation : virtual public locationGameInterface, virtual public locationPlayerInterface {
 	std::vector<Culture*> _plantsList;
+	int const culturesMinRand = 30;
+	int const culturesMaxRand = 100;
 public:
 	CultureLocation(int plantsNumber)
 	{
 		Culture* newPlant = nullptr;
 		for (int i = 0; i < plantsNumber; i++)
 		{
-			int size = getRand(0, 3);
-			std::string color parameter = static_cast<color>(getRand(0, 6));
-			double maxHarvest = getRand(50 * (size + 1), 150 * (size + 1));
-			if (getRand(0, 2)) { newPlant = new CherryTree(size, color, maxHarvest); }
+			newPlant = getRandPlant();
 			_plantsList.push_back(newPlant);
+		}
+	}
+	CultureLocation() {
+		int culturesNum = getRand(culturesMinRand, culturesMaxRand);
+		for (int i = 0; i < culturesNum; i++) {
+			_plantsList.push_back(getRandPlant());
 		}
 	}
 	~CultureLocation()
@@ -44,14 +49,25 @@ public:
 		_plantsList.clear();
 	}
 
-	Culture* AddNewPlant() override
+	Culture* addNewPlant() override
 	{
-		Culture* newCult = nullptr;
-		if (getRand(0, 2)) { newCult = new CherryTree(size, color, maxHarvest); }
+		Culture* newCult = getRandPlant();
 		_plantsList.push_back(newCult);
 		return newCult;
 	}
-	void DeletePlant() override
+	Culture* getRandPlant() {
+		Culture* newCult = nullptr;
+		int size = getRand(0, 3);
+		color parameter = static_cast<color>(getRand(0, int(color::_endOfEnum)));
+		size_t maxHarvest = getRand(20 * (size + 1), 50 * (size + 1));
+		int randCultChoice = getRand(0, int(Culture::cultureType::_endOfEnum));
+		switch (randCultChoice) {
+		case 0: newCult = new CherryTree(size, parameter, maxHarvest);
+		}
+		return newCult;
+
+	}
+	void deletePlant() override
 	{
 		_plantsList.pop_back();
 	}
@@ -79,13 +95,31 @@ public:
 			_plantsList[i]->printInfo();
 		}
 	}
+
+	void InfoEx() {
+		std::map <std::string, int> ingroupCount;
+		std::map <std::string, double> ingroupHarvest;
+
+		double totalHarvest = 0;
+
+		for (int i = 0; i < _plantsList.size(); ++i) {
+			++ingroupCount[_plantsList[i]->getName()];
+			ingroupHarvest[_plantsList[i] - getName()] += _plantsList[i]->getRemainHarv;
+			totalHarvest += _plantsList[i]->getRemainHarv;
+		}
+		for (auto iter = ingroupCount.begin(); iter != ingroupCount.end(); iter++) {
+			std::cout << "\n" << iter->first << ": " << iter->second << "\tHarvest: " << ingroupHarvest[iter->first];
+		}
+		std::cout << "\n\nВсего культур " << _plantsList.size();
+		std::cout << "\nВсего плодов " << totalHarvest << "\n\n";
+	}
 	class iterator
 	{
-		Culture* _dataIterator;
+		Culture** _dataIterator;
 
 	public:
 		iterator() = delete;
-		iterator(Culture* data) : _dataIterator(data) {}
+		iterator(Culture** data) : _dataIterator(data) {}
 
 		iterator& operator++()
 		{
@@ -115,7 +149,7 @@ public:
 
 		Culture& operator*()
 		{
-			return *_dataIterator;
+			return **_dataIterator;
 		}
 		bool operator != (const iterator& obj)
 		{
@@ -128,7 +162,11 @@ public:
 
 	};
 
+	iterator begin() { return &_plantsList[0]; }
+	iterator end() { return &_plantsList[_plantsList.size() - 1]; }
+	
 	Culture& operator [ ] (int index) { return *_plantsList[index]; }
-	iterator begin() { return _plantsList[0]; }
-	iterator end() { return _plantsList[_plantsList.size() - 1]; }
+	auto at(size_t index) const -> const Culture& {
+		return *_plantsList.at(index);
+	}
 };

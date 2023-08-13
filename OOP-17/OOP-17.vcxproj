@@ -136,6 +136,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="backpack.h" />
+    <ClInclude Include="BaseCulture.h" />
     <ClInclude Include="CherryTree.h" />
     <ClInclude Include="cultures.h" />
     <ClInclude Include="Fruit.h" />
